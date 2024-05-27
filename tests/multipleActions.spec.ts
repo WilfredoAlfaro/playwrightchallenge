@@ -1,20 +1,20 @@
 import {test, expect, selectors} from '@playwright/test';
-import getRandomLocator from '../randomMethod.ts'
-
+import randomMethods from '../randomMethod.ts'
 
 test('Multiple Actions test', async ({page}) => {
     await page.goto('https://practice-automation.com/')
-    
-    //HomePage locators
-    const formFieldsButton = await page.getByText('Form Fields');
-    const slidersButton = await page.getByText('Sliders');
-    const tablesButton = await page.getByText('Tables');
-    const windowsButton = await page.getByText('Window Operations');
-    const fileUploadButton = await page.getByText('File Upload');
-    const iframesButton = await page.getByText('Iframes');
+    const methods = new randomMethods(); //Object to get the methods from another class
 
-    //HomePage actions
-    formFieldsButton.click();
+    //HomePage locators
+    const formFieldsButton = page.getByText('Form Fields');
+    const slidersButton = page.getByText('Sliders');
+    const tablesButton = page.getByText('Tables');
+    const windowsButton = page.getByText('Window Operations');
+    const fileUploadButton = page.getByText('File Upload');
+    const iframesButton = page.getByText('Iframes');
+
+    //Form field Test 
+    await formFieldsButton.click();
     await expect(page).toHaveURL(/.*form-fields/)
 
 
@@ -48,10 +48,31 @@ test('Multiple Actions test', async ({page}) => {
     //Form fields actions
     expect(nameInput).toBeVisible();
     await nameInput.fill('Nelson Mandela');
-    await getRandomLocator(drinks).setChecked(true);
-    await getRandomLocator(color).check();
+    await methods.getRandomLocator(drinks).setChecked(true);
+    await methods.getRandomLocator(color).check();
     await  siblings.selectOption({index:Math.floor(Math.random() * 3)});
     await email.fill('testing@gmail.com');
     await textArea.fill('This is just a test');
+
+    //return to homePage
+    await page.goBack();
+   
+
+    //Slider Button test
+    await slidersButton.click();
+    await expect(page).toHaveURL(/.*slider/)
+
+    //Slider page locators
+    const currentValueElement = page.locator('id=value');
+    const slideButton = page.locator('id=slideMe');
+
+    //Slider page actions
+
+    await slideButton.click();
+    expect(await currentValueElement.textContent()).toEqual('50');
+    await page.keyboard.press('ArrowLeft');
+    expect(await currentValueElement.textContent()).toEqual('49');
+
+    
 });
 
