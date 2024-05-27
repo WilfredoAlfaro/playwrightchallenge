@@ -73,6 +73,21 @@ test('Multiple Actions test', async ({page}) => {
     await page.keyboard.press('ArrowLeft');
     expect(await currentValueElement.textContent()).toEqual('49');
 
+    //Return to homePage
+    await page.goBack();
+
+    //Table button test
+    await tablesButton.click();
+    await expect(page).toHaveURL(/.*tables/)
+
+    //Table page locators
+    const tableSearch = page.getByRole('search');
+    const tableData = page.locator('id=tablepress-1').filter({has: page.locator('class=row-hover')});
+
+    expect(tableSearch).toBeVisible();
+    expect(tableData).toBeVisible();
+
+
     
 });
 

@@ -11,13 +11,13 @@ class randomMethods{
   return locators[randomIndex];
 }
 
-keyPress(locator, page){
-locator.click();
+/*async function keyPress(locator){
+await locator.click();
 for(let i = 0; i < 3; i ++){
-  page.keyboard.press('Arrowleft');
+  await locator.press('ArrowLeft');
 }
-
 }
+*/
 
 
 }
