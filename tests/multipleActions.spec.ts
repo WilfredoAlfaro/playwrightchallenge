@@ -1,5 +1,6 @@
 import {test, expect, selectors} from '@playwright/test';
 import randomMethods from '../randomMethod.ts'
+import path from 'path';
 
 test('Multiple Actions test', async ({page}) => {
     await page.goto('https://practice-automation.com/')
@@ -81,11 +82,92 @@ test('Multiple Actions test', async ({page}) => {
     await expect(page).toHaveURL(/.*tables/)
 
     //Table page locators
-    const tableSearch = page.getByRole('search');
-    const tableData = page.locator('id=tablepress-1').filter({has: page.locator('class=row-hover')});
+    const tableSearch = page.getByLabel('Search:');
+    const dynamicTable = page.locator('id=tablepress-1').filter({has:page.locator('tbody  ')});
+    const dynamicTableRows = dynamicTable.locator('tr').locator(':scope').locator('td');
+    const dynamicTableData: string [] = [];
 
-    expect(tableSearch).toBeVisible();
-    expect(tableData).toBeVisible();
+    await expect(tableSearch).toBeVisible();
+    //await expect(staticTable).toBeVisible();
+
+    //Table test actions
+    await tableSearch.fill('China');
+    for (const text of await dynamicTableRows.allInnerTexts()){
+     dynamicTableData.push(text);
+    }
+    expect(dynamicTableData).toHaveLength(3);
+    console.log(dynamicTableData);
+
+    //Return to homePage
+    await page.goBack();
+
+    //Upload file test 
+    await fileUploadButton.click();
+
+    //Upload file test locators
+    const chooseFileButton = page.locator('#file-upload');
+    const submitbutton = page.getByRole('button', {name: 'upload'});
+    const responseLabel = page.locator('div.wpcf7-response-output');
+    await expect(chooseFileButton).toBeVisible();
+    await expect(submitbutton).toBeVisible();
+
+    //Upload file test action
+    await chooseFileButton.setInputFiles(path.join('/Users/ravn011/Downloads/','testCheck.jpg'));
+    await submitbutton.click();
+    await expect(responseLabel).toHaveText('Thank you for your message. It has been sent.');
+   console.log(await responseLabel.textContent());
+    
+
+   //Return to homepage
+   await page.goBack();
+
+   //Iframe test 
+   await iframesButton.click();
+
+   //Iframe Locators
+   const seleniumOption = page.frameLocator('#frame1').getByText('Projects');
+   const hompageButton = page.getByAltText('automateNow Logo');
+   //Iframe actions
+   await expect(seleniumOption).toBeVisible();
+   await seleniumOption.click();
+
+   //Return to hompage
+   await hompageButton.click();
+
+   //Windows operation test 
+   await windowsButton.click();
+   await expect(page).toHaveURL(/.*window-operations/);
+
+   //windows handler locators
+   const newTab = page.getByRole('button', {name:'New Tab'});
+   
+   
+   
+   //Windows operations actions
+   await expect(newTab).toBeVisible();
+
+   const [newPage] = await Promise.all([
+     page.context().waitForEvent('page'),
+     newTab.click()
+   ]);
+
+   await newPage.waitForLoadState();
+   await newPage.close();
+
+   await expect(page).toHaveURL(/.*window-operations/);
+
+   
+ 
+
+
+   
+   
+
+
+
+   
+
+     
 
 
     
