@@ -155,21 +155,6 @@ test('Multiple Actions test', async ({page}) => {
    await newPage.close();
 
    await expect(page).toHaveURL(/.*window-operations/);
-
-   
  
-
-
-   
-   
-
-
-
-   
-
-     
-
-
-    
 });
 
