@@ -68,11 +68,14 @@ test('Multiple Actions test', async ({page}) => {
     const slideButton = page.locator('id=slideMe');
 
     //Slider page actions
-
+    const amountOfMovements = 10;
+    const isLeft = false;
     await slideButton.click();
     expect(await currentValueElement.textContent()).toEqual('50');
-    await page.keyboard.press('ArrowLeft');
-    expect(await currentValueElement.textContent()).toEqual('49');
+    for (let i = 0; i < amountOfMovements; i++) {
+     await page.keyboard.press(`${isLeft? 'ArrowLeft' : 'ArrowRight'}`);
+    }
+    expect(await currentValueElement.textContent()).toEqual('60');
 
     //Return to homePage
     await page.goBack();
@@ -100,9 +103,11 @@ test('Multiple Actions test', async ({page}) => {
 
     //Return to homePage
     await page.goBack();
+    
 
     //Upload file test 
     await fileUploadButton.click();
+    await expect(page).toHaveURL(/.*file-upload/);
 
     //Upload file test locators
     const chooseFileButton = page.locator('#file-upload');
@@ -112,7 +117,7 @@ test('Multiple Actions test', async ({page}) => {
     await expect(submitbutton).toBeVisible();
 
     //Upload file test action
-    await chooseFileButton.setInputFiles(path.join('/Users/ravn011/Downloads/','testCheck.jpg'));
+    await chooseFileButton.setInputFiles(path.join(process.cwd(),'/assets/testCheck.jpg'));
     await submitbutton.click();
     await expect(responseLabel).toHaveText('Thank you for your message. It has been sent.');
    console.log(await responseLabel.textContent());
@@ -123,6 +128,7 @@ test('Multiple Actions test', async ({page}) => {
 
    //Iframe test 
    await iframesButton.click();
+   await expect(page).toHaveURL(/.*iframes/);
 
    //Iframe Locators
    const seleniumOption = page.frameLocator('#frame1').getByText('Projects');
@@ -141,8 +147,6 @@ test('Multiple Actions test', async ({page}) => {
    //windows handler locators
    const newTab = page.getByRole('button', {name:'New Tab'});
    
-   
-   
    //Windows operations actions
    await expect(newTab).toBeVisible();
 
@@ -150,11 +154,9 @@ test('Multiple Actions test', async ({page}) => {
      page.context().waitForEvent('page'),
      newTab.click()
    ]);
-
-   await newPage.waitForLoadState();
    await newPage.close();
-
    await expect(page).toHaveURL(/.*window-operations/);
+    
  
 });
 
