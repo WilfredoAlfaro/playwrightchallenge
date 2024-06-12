@@ -101,6 +101,7 @@ test('Multiple Actions test', async ({page}) => {
     expect(dynamicTableData).toHaveLength(3);
     console.log(dynamicTableData);
 
+
     //Return to homePage
     await page.goBack();
     
