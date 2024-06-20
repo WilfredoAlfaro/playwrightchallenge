@@ -5,7 +5,7 @@ import SaucelabsCheckout from '../../src/page-objects/saucelabs-checkout.page';
 
 test.describe('Login Page Scenarios', () => {
 
-    test('TC01: Login Page validation', async ({page}) => {
+    test('TC01: Login Page validation @SmokeTest @Regression', async ({page}) => {
         const loginPage = new SaucelabsLoginPage(page);
         await loginPage.goToSaucelabUrl();
         await loginPage.loginPagevalidation();
@@ -17,7 +17,7 @@ test.describe('Login Page Scenarios', () => {
     });
 
 
-    test('TC02 Login and add to cart test', async ({page}) => {
+    test('TC02 Login and add to cart test @Regression', async ({page}) => {
         const loginPage = new SaucelabsLoginPage(page);
         const homePage = new SaucelabsHomePage(page); 
         await loginPage.goToSaucelabUrl();
@@ -35,7 +35,7 @@ test.describe('Login Page Scenarios', () => {
     });
 
 
-    test('TC03 Login, Add to cart and checkout Test', async ({page}) => {
+    test('TC03 Login, Add to cart and checkout Test @SmokeTest @Regression', async ({page}) => {
         const loginPage = new SaucelabsLoginPage(page);
         const homePage = new SaucelabsHomePage(page); 
         const checkoutPage = new SaucelabsCheckout(page);
